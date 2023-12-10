@@ -1,80 +1,90 @@
 <template>
   <div class="solicitacao">
-    <div class="q-pa-md" style="max-width: 600px">
-      <q-input filled 
-            v-model="nome" 
-            label="Nome Completo"
-         />
-        <q-input filled 
-            v-model="email"
-            label="Email" 
-            type="email"
-        />
-        <q-input filled 
-            v-model="orgao" 
-            label="Orgão"
-         />
-        <q-input filled
-            v-model="telefone"
-            label="Telefone"
-            mask="(##) ##### - ####"
-         />
-         <q-input filled 
-            v-model="numeroDocumento" 
-            label="Nº Documento Material (MIGO)"
-         />
-         <q-input filled 
-            v-model="centroCusto" 
-            label="Centro de Custo ou PEP"
-         />
+   
+      <h2>Solicitação de Transporte</h2>
+      <div class="container-solicitacao">
 
-         <div class="q-pa-md q-gutter-sm">
-            <q-toggle
-                label="Urgente"
-                v-model="urgente"
-                checked-icon="check"
-                color="green"
-                unchecked-icon="clear"
-            />
-          
+    
+        <div class="form-step1">
+          <q-input filled 
+              v-model="nome" 
+              label="Nome Completo"
+          />
+          <q-input filled 
+              v-model="email"
+              label="Email" 
+              type="email"
+          />
+          <q-input filled 
+              v-model="orgao" 
+              label="Orgão"
+          />
+          <q-input filled
+              v-model="telefone"
+              label="Telefone"
+              mask="(##) ##### - ####"
+          />
+          <q-input filled 
+              v-model="numeroDocumento" 
+              label="Nº Documento Material (MIGO)"
+          />
+          <q-input filled 
+              v-model="centroCusto" 
+              label="Centro de Custo ou PEP"
+          />
+
+          <div class="q-pa-md q-gutter-sm">
+              <q-toggle
+                  label="Urgente"
+                  v-model="urgente"
+                  checked-icon="check"
+                  color="green"
+                  unchecked-icon="clear"
+              /> 
+            </div>
+
+            
         </div>
+        <div class="form-step2">
+          <q-input filled 
+              v-model="dataReservada"
+              label="Dia da Reserva" 
+              type="date"
+          />
+          <q-input filled 
+              v-model="dataLimite"
+              label="Dia Limite de Entrega" 
+              type="date"
+          />
 
-         <q-input filled 
-            v-model="dataReservada"
-            label="Dia da Reserva" 
-            type="date"
-        />
-        <q-input filled 
-            v-model="dataLimite"
-            label="Dia Limite de Entrega" 
-            type="date"
-        />
+          <q-input
+            filled
+            v-model="enderecoPartida"
+            label="Endereço de Partida"
+            ref="inputPartida"
+          />
+        
+        
+          <q-input
+            filled
+            v-model="enderecoDestino"
+            label="Endereço de Destino"
+            ref="inputDestino"
+          />
 
-      <q-input
-        filled
-        v-model="enderecoPartida"
-        label="Endereço de Partida"
-        ref="inputPartida"
-      />
-     
-     
-      <q-input
-        filled
-        v-model="enderecoDestino"
-        label="Endereço de Destino"
-        ref="inputDestino"
-      />
+          <q-btn @click="calcularRota" class="button" label="Calcular Rota" color="primary" />
 
-      <q-btn @click="calcularRota" label="Calcular Rota" color="primary" />
+          <!-- Exibir informações sobre a rota -->
+          <div v-if="rota">
+            <p>Distância: {{ rota.distancia }}</p>
+            <p>Tempo estimado: {{ rota.tempo }}</p>
+          </div>
 
-      <!-- Exibir informações sobre a rota -->
-      <div v-if="rota">
-        <p>Distância: {{ rota.distancia }}</p>
-        <p>Tempo estimado: {{ rota.tempo }}</p>
+        </div>
+        <div id="map"></div>
+       
       </div>
-
-      <div id="map"></div>
-    </div>
+      <hr> 
   </div>
 </template>
 
@@ -225,8 +235,47 @@ export default {
 </script>
 
 <style>
+.solicitacao{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+.container-solicitacao{
+  width: 100%;
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+}
+.form-step1{
+  width: 35%;
+  margin: 0px 10px 5px 10px;
+}
+.form-step2{
+  width: 35%;
+  margin: 0px 20px 5px 10px;
+}
 #map {
   height: 400px;
-  width: 100%;
+  width: 25%;
 }
+.button{
+  margin-top: 5px;
+}
+@media (max-width: 1000px) {
+    h2{
+      font-size: 30px;
+    }
+    .container-solicitacao{
+      flex-direction: column;
+    }
+    .form-step1, .form-step2, #map{
+      width: 100%;
+      margin: 0px;
+    }
+    #map{
+      margin-top: 10px;
+    }
+}
+
 </style>
