@@ -36,7 +36,7 @@
                 color="green"
                 unchecked-icon="clear"
             />
-            tss: {{ teste }}
+          
         </div>
 
          <q-input filled 
@@ -104,7 +104,7 @@ export default {
         partida: null,
         destino: null,
       },
-      teste:''
+      
     };
   },
   watch: {
@@ -133,65 +133,79 @@ export default {
     },
 
     atualizarAutocomplete(tipo, evento) {
-      const input = evento.target;
-    const autocomplete = tipo === 'partida' ? this.autocompletePartida : this.autocompleteDestino;
-   
 
-    // Conecte o autocomplete ao campo de entrada
-    autocomplete.bindTo('bounds', this.mapa);
-
-    // Ouça o evento 'place_changed'
-    autocomplete.addListener('place_changed', () => {
-      const place = autocomplete.getPlace();
-
-
-      if (!place.geometry) {
-        // Usuário inseriu um lugar que não retornou resultados
-        return;
-      }
-
- 
-      // Atualize as coordenadas no mapa, se necessário
-      this.mapa.setCenter(place.geometry.location);
-      this.mapa.setZoom(14); // Ajuste o zoom conforme necessário
+      const autocomplete = tipo === 'partida' ? this.autocompletePartida : this.autocompleteDestino;
     
-      if (tipo === 'partida') {
-      this.enderecoPartida = place.formatted_address;
-    } else {
-      this.enderecoDestino = place.formatted_address;
-    }
-    });
+
+      // Conecte o autocomplete ao campo de entrada
+      autocomplete.bindTo('bounds', this.mapa);
+
+      // Ouça o evento 'place_changed'
+      autocomplete.addListener('place_changed', () => {
+        
+        const place = autocomplete.getPlace();
+
+        if (!place.geometry) {
+          // Usuário inseriu um lugar que não retornou resultados
+          return;
+        }
+
+        // Atualize as coordenadas no mapa, se necessário
+        this.mapa.setCenter(place.geometry.location);
+        this.mapa.setZoom(14); // Ajuste o zoom conforme necessário
+      
+        if (tipo === 'partida') {
+          this.enderecoPartida = place.formatted_address;
+          } else {
+          this.enderecoDestino = place.formatted_address;
+        }
+
+      });
     },
 
     calcularRota() {
-      // ... (seu código existente) ...
+  const request = {
+    origin: this.enderecoPartida,
+    destination: this.enderecoDestino,
+    travelMode: 'DRIVING',
+  };
 
-      const request = {
-        origin: this.enderecoPartida,
-        destination: this.enderecoDestino,
-        travelMode: 'DRIVING',
-      };
+  const directionsService = new google.maps.DirectionsService();
 
-      const directionsService = new google.maps.DirectionsService();
-      const directionsRenderer = new google.maps.DirectionsRenderer({ map: this.mapa });
+  // Crie uma Promise para aguardar a conclusão da execução assíncrona
+  const rotaPromise = new Promise((resolve, reject) => {
+    directionsService.route(request, (response, status) => {
+      if (status === 'OK') {
+        resolve(response);
+      } else {
+        reject(status);
+      }
+    });
+  });
 
-      directionsService.route(request, (response, status) => {
-        if (status === 'OK') {
-          directionsRenderer.setDirections(response);
-          const rota = response.routes[0].legs[0];
-          this.rota = {
-            distancia: rota.distance.text,
-            tempo: rota.duration.text,
-          };
+  rotaPromise.then((response) => {
+    // Limpe a rota anterior
+    if (this.directionsRenderer) {
+      this.directionsRenderer.setMap(null);
+    }
 
-          // Adicione marcadores para a partida e destino
-          this.adicionarMarcador('partida', rota.start_location, 'Partida');
-          this.adicionarMarcador('destino', rota.end_location, 'Destino');
-        } else {
-          console.error('Erro ao calcular a rota:', status);
-        }
-      });
-    },
+    // Renderize a nova rota
+    this.directionsRenderer = new google.maps.DirectionsRenderer({ map: this.mapa });
+    this.directionsRenderer.setDirections(response);
+
+    const rota = response.routes[0].legs[0];
+    this.rota = {
+      distancia: rota.distance.text,
+      tempo: rota.duration.text,
+    };
+
+    // Adicione marcadores para a partida e destino
+    this.adicionarMarcador('partida', rota.start_location, 'Partida');
+    this.adicionarMarcador('destino', rota.end_location, 'Destino');
+  }).catch((status) => {
+    console.error('Erro ao calcular a rota:', status);
+  });
+},
 
     adicionarMarcador(tipo, localizacao, titulo) {
       // Remova o marcador existente se houver
