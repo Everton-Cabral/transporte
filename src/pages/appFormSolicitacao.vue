@@ -36,6 +36,7 @@
                 color="green"
                 unchecked-icon="clear"
             />
+            tss: {{ teste }}
         </div>
 
          <q-input filled 
@@ -53,14 +54,14 @@
         filled
         v-model="enderecoPartida"
         label="Endereço de Partida"
-        @input="atualizarAutocomplete('partida', $event)"
         ref="inputPartida"
       />
+     
+     
       <q-input
         filled
         v-model="enderecoDestino"
         label="Endereço de Destino"
-        @input="atualizarAutocomplete('destino', $event)"
         ref="inputDestino"
       />
 
@@ -103,9 +104,17 @@ export default {
         partida: null,
         destino: null,
       },
+      teste:''
     };
   },
-
+  watch: {
+    enderecoPartida: function(newValue) {
+      this.atualizarAutocomplete('partida', newValue);
+    },
+    enderecoDestino: function(newValue) {
+      this.atualizarAutocomplete('destino', newValue);
+    }
+  },
   methods: {
     inicializarMapa() {
       const recife = { lat: -8.047562, lng: -34.877044 };
@@ -126,6 +135,7 @@ export default {
     atualizarAutocomplete(tipo, evento) {
       const input = evento.target;
     const autocomplete = tipo === 'partida' ? this.autocompletePartida : this.autocompleteDestino;
+   
 
     // Conecte o autocomplete ao campo de entrada
     autocomplete.bindTo('bounds', this.mapa);
@@ -134,14 +144,22 @@ export default {
     autocomplete.addListener('place_changed', () => {
       const place = autocomplete.getPlace();
 
+
       if (!place.geometry) {
         // Usuário inseriu um lugar que não retornou resultados
         return;
       }
 
+ 
       // Atualize as coordenadas no mapa, se necessário
       this.mapa.setCenter(place.geometry.location);
       this.mapa.setZoom(14); // Ajuste o zoom conforme necessário
+    
+      if (tipo === 'partida') {
+      this.enderecoPartida = place.formatted_address;
+    } else {
+      this.enderecoDestino = place.formatted_address;
+    }
     });
     },
 
