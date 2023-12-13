@@ -94,9 +94,8 @@
           <q-input rounded outlined v-model="altura" label="Altura  (m)" style="margin: 5px;"/>
           <q-input rounded outlined v-model="peso" label="Peso (Kg)" style="margin: 5px;"/>
           <q-select rounded outlined v-model="estivacao" :options="optionsEstivacao" label="Estivação" style="margin: 5px;"/>
-          <q-btn round color="secondary" icon="add" style="margin: 5px; width: 60px;"/>
+          <q-btn round color="secondary" icon="add" style="margin: 5px; width: 60px;" @click="addMaterial()"/>
         </div>
-        
       </div>
   </div>
 </template>
@@ -136,7 +135,8 @@ export default {
       altura: '',
       peso:'',
       estivacao:'Selecione',
-      optionsEstivacao: ['Apenas Carregamento', 'Apenas Descarregamento', 'Carregamento e Descarregamento', 'N/D']
+      optionsEstivacao: ['Apenas Carregamento', 'Apenas Descarregamento', 'Carregamento e Descarregamento', 'N/D'],
+      materiais:[]
       
     };
   },
@@ -149,6 +149,19 @@ export default {
     }
   },
   methods: {
+    addMaterial(){
+      const novoMaterial = {
+        codSap: this.codSap,
+        descricao: this.descricao,
+        unidade: this.unidade,
+        comprimento: this.comprimento,
+        largura: this.largura,
+        altura: this.altura,
+        volume: this.comprimento * this.largura * this.altura,
+        estivacao: this.estivacao,
+      }
+      this.materiais.push(novoMaterial)
+    },
     inicializarMapa() {
       const recife = { lat: -8.047562, lng: -34.877044 };
 
@@ -197,11 +210,11 @@ export default {
     },
 
     calcularRota() {
-  const request = {
-    origin: this.enderecoPartida,
-    destination: this.enderecoDestino,
-    travelMode: 'DRIVING',
-  };
+      const request = {
+      origin: this.enderecoPartida,
+      destination: this.enderecoDestino,
+      travelMode: 'DRIVING',
+    };
 
   const directionsService = new google.maps.DirectionsService();
 
@@ -235,9 +248,9 @@ export default {
     // Adicione marcadores para a partida e destino
     this.adicionarMarcador('partida', rota.start_location, 'Partida');
     this.adicionarMarcador('destino', rota.end_location, 'Destino');
-  }).catch((status) => {
-    console.error('Erro ao calcular a rota:', status);
-  });
+    }).catch((status) => {
+      console.error('Erro ao calcular a rota:', status);
+    });
 },
 
     adicionarMarcador(tipo, localizacao, titulo) {
