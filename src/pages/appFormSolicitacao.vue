@@ -84,7 +84,20 @@
         <div id="map"></div>
        
       </div>
-      <hr> 
+      <div class="materiais">
+        <div class="form-materiais">
+          <q-input rounded outlined v-model="codSap" label="Código SAP"  style="margin: 5px;"/>
+          <q-input rounded outlined v-model="descricao" label="Descrição" style="margin: 5px;"/>
+          <q-select rounded outlined v-model="unidade" :options="optionsUnidade" label="Unidade" style="margin: 5px;"/>
+          <q-input rounded outlined v-model="comprimento" label="Comprimento  (m)" style="margin: 5px;"/>
+          <q-input rounded outlined v-model="largura" label="Largura (m)" style="margin: 5px;"/>
+          <q-input rounded outlined v-model="altura" label="Altura  (m)" style="margin: 5px;"/>
+          <q-input rounded outlined v-model="peso" label="Peso (Kg)" style="margin: 5px;"/>
+          <q-select rounded outlined v-model="estivacao" :options="optionsEstivacao" label="Estivação" style="margin: 5px;"/>
+          <q-btn round color="secondary" icon="add" style="margin: 5px; width: 60px;"/>
+        </div>
+        
+      </div>
   </div>
 </template>
 
@@ -114,6 +127,16 @@ export default {
         partida: null,
         destino: null,
       },
+      codSap: '',
+      descricao:'',
+      unidade: 'Unidade',
+      optionsUnidade: ['Unidade', 'Caixa','Fardo'],
+      comprimento:'',
+      largura: '',
+      altura: '',
+      peso:'',
+      estivacao:'Selecione',
+      optionsEstivacao: ['Apenas Carregamento', 'Apenas Descarregamento', 'Carregamento e Descarregamento', 'N/D']
       
     };
   },
@@ -261,6 +284,18 @@ export default {
 }
 .button{
   margin-top: 5px;
+}
+.materiais{
+  background-color: rgb(235, 235, 235);
+  height: 70px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.form-materiais{
+  display: flex;
+  justify-content: center;
 }
 @media (max-width: 1000px) {
     h2{
