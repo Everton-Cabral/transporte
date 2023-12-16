@@ -88,12 +88,12 @@
         <div class="form-materiais">
           <q-input rounded outlined v-model="codSap" label="Código SAP"  style="margin: 5px;"/>
           <q-input rounded outlined v-model="descricao" label="Descrição" style="margin: 5px;"/>
-          <q-input rounded outlined v-model="qtd" label="Qtd" style="margin: 5px;"/>
+          <q-input rounded outlined v-model="qtd" label="Qtd" style="margin: 5px; width: 80px;"/>
           <q-select rounded outlined v-model="unidade" :options="optionsUnidade" label="Unidade" style="margin: 5px;"/>
-          <q-input rounded outlined v-model="comprimento" label="Comprimento  (m)" style="margin: 5px;"/>
-          <q-input rounded outlined v-model="largura" label="Largura (m)" style="margin: 5px;"/>
-          <q-input rounded outlined v-model="altura" label="Altura  (m)" style="margin: 5px;"/>
-          <q-input rounded outlined v-model="peso" label="Peso (Kg)" style="margin: 5px;"/>
+          <q-input rounded outlined v-model="comprimento" label="Comprimento  (m)" style="margin: 5px; width: 80px;"/>
+          <q-input rounded outlined v-model="largura" label="Largura (m)" style="margin: 5px; width: 80px;"/>
+          <q-input rounded outlined v-model="altura" label="Altura  (m)" style="margin: 5px; width: 80px;"/>
+          <q-input rounded outlined v-model="peso" label="Peso (Kg)" style="margin: 5px; width: 80px;"/>
           <q-select rounded outlined v-model="estivacao" :options="optionsEstivacao" label="Estivação" style="margin: 5px;"/>
           <q-btn round color="secondary" icon="add" style="margin: 5px; width: 60px;" @click="addMaterial()"/>
         </div>
@@ -203,6 +203,15 @@ export default {
         estivacao: this.estivacao,
       }
       this.materiais.push(novoMaterial)
+      this.codSap = ""
+      this.descricao = ""
+      this.qtd = ""
+      this.unidade = "Unidade"
+      this.comprimento = ""
+      this.largura = ""
+      this.altura = ""
+     this.estivacao = ""
+     this.peso = ""
     },
     inicializarMapa() {
       const recife = { lat: -8.047562, lng: -34.877044 };
@@ -351,10 +360,13 @@ export default {
 .form-materiais{
   display: flex;
   justify-content: center;
+  
+ 
 }
 .container-tabela{
   width: 95%;
   margin: 10px;
+
 }
 @media (max-width: 1000px) {
     h2{
@@ -369,6 +381,15 @@ export default {
     }
     #map{
       margin-top: 10px;
+    }
+    .materiais{
+      height: auto;
+    }
+    .form-materiais{
+      flex-wrap: wrap;
+    }
+    .container-tabela{
+      width: 95%;
     }
 }
 
