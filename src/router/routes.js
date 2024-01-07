@@ -8,7 +8,9 @@ const routes = [
     path: '/app',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') }
+      { path: '/app', component: () => import('pages/IndexPage.vue') },
+      { path: '/solicitacoespendentes', component: () => import('pages/solicitacoesPendentes.vue') },
+      { path: '/finalizarsolicitacao', component: () => import('pages/finalizarSolicitacao.vue') },
     ]
   },
 
@@ -16,6 +18,11 @@ const routes = [
     path: '/solicitacao',
     component: () => import('pages/appFormSolicitacao.vue')
   },
+  {
+    path: '/materiais',
+    component: () => import('pages/appMateriais.vue')
+  },
+
   // Always leave this as last one,
   // but you can also remove it
   {
