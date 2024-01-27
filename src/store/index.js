@@ -22,6 +22,7 @@ export default store(function () {
       },
       solicitacoes:"",
       idSolicitacaoFinalizar:"",
+      solicitacaoFinalizar:[],
     
     },
     mutations: {
@@ -66,6 +67,13 @@ export default store(function () {
           .then((response) => response.json())
           .then((data) => (context.state.solicitacoes = data))
           .catch((error) => console.error("Erro ao buscar Solicitações", error))
+      },
+
+      getIdSolicitacao(context){
+        fetch(`http://localhost:3000/solicitacao/consultaId/${context.state.idSolicitacaoFinalizar}`)
+          .then((response) => response.json())
+          .then((data) => (context.state.solicitacaoFinalizar = data))
+          .catch((error) => console.error("Erro ao buscar Solicitação", error))
       }
     },
     getters: {
@@ -73,3 +81,5 @@ export default store(function () {
     },
   });
 });
+
+// chave api googledrive AIzaSyAX7YGBGQvUiKfG2BFRdP4D4xtaL_0QMlo
